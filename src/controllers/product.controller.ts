@@ -4,7 +4,7 @@ import * as productService from '../services/product.service';
 
 export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { name, description, price, stock_level } = req.body;
+        const { name, description, price, stock_level, category, min_stock } = req.body;
 
         if (!req.file) {
            res.status(400).json({ message: 'Image file is required' });
@@ -18,7 +18,9 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
           description,
           price,
           stock_level,
-          image_url
+          image_url,
+          category,
+          min_stock
         });
         res.status(201).json(product);
 
@@ -29,13 +31,15 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
 
 export const getAllProducts = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const products = await productService.getAllProducts();
+        const query = req.query;
+        const products = await productService.getAllProducts(query);
         res.json(products);
 
     } catch (error) {
         next(error);
     }
 }
+
 
 export const getProductById = async (req: Request, res: Response, next: NextFunction) => {
     try {

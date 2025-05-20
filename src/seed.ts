@@ -16,13 +16,16 @@ const users: Partial<IUser>[] = [
   const products: Partial<IProduct>[] = [
     {
       name: 'Product A',
+      category: 'Category 1',
       description: 'Description for product A',
       price: 10,
       stock_level: 100,
+      min_stock: 4,
       image_url: 'http://example.com/images/productA.png',
     },
     {
       name: 'Product B',
+      category: 'Category 2',
       description: 'Description for product B',
       price: 20,
       stock_level: 50,
@@ -30,6 +33,7 @@ const users: Partial<IUser>[] = [
     },
     {
       name: 'Product C',
+      category: 'Category 3',
       description: 'Description for product C',
       price: 15,
       stock_level: 75,
