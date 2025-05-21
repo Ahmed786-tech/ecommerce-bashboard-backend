@@ -13,6 +13,9 @@ app.use(express.json());
 app.use(cors({
   origin: '*'
 }))
+app.get('/', (req, res) => {
+  res.send('API is running');
+});
 
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/products', productRoutes);
