@@ -12,6 +12,7 @@ app.use(express.json());
 
 app.use(cors({
   origin: 'https://ecommerce-dashboard-frontend-cyan.vercel.app',
+  credentials: true
 }));
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'https://ecommerce-dashboard-frontend-cyan.vercel.app');
