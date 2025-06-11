@@ -11,8 +11,9 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: '*'
-}))
+  origin: 'https://ecommerce-dashboard-frontend-cyan.vercel.app',
+  credentials: true, // If you're using cookies or Authorization headers
+}));
 app.get('/', (req, res) => {
   res.send('API is running');
 });
