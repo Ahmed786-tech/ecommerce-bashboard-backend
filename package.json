@@ -9,7 +9,7 @@
     "start": "node dist/src/index.js",
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "vercel-build": "echo 'No build step required for Vercel'",
+    "vercel-build": "tsc",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf dist 'package-lock.json' 'node_modules'"
   },
