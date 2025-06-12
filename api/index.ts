@@ -13,22 +13,26 @@ const connectOnce = async () => {
     }
     await connectDB(MONGO_URI);
     isConnected = true;
-    console.log('Database connected in serverless function');
+    console.log('✅ Database connected in serverless function');
   }
 };
 
 export default async (req: Request, res: Response) => {
   try {
+    console.log(`📝 ${req.method} ${req.url}`);
+    
     await connectOnce();
     
-    // This is the key fix - app should handle the request
+    // Let Express handle the request - it has CORS configured
     return app(req, res);
   } catch (error) {
     const err = error as Error;
-    console.error('Serverless function error:', error);
+    console.error('❌ Serverless function error:', error);
+    
     return res.status(500).json({
       error: 'Internal server error',
-      message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
+      message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong',
+      timestamp: new Date().toISOString()
     });
   }
 };

@@ -1,4 +1,4 @@
-// src/app.ts - Minimal version to debug step by step
+// src/app.ts - Simplified working version
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
@@ -8,33 +8,39 @@ const app = express();
 
 console.log('🚀 Starting app configuration...');
 
-// Static file serving - works for both local and Vercel
+// Simple CORS configuration that works
+const allowedOrigins = [
+  'https://ecommerce-dashboard-frontend-cyan.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:5173',
+];
+
+// Manual CORS middleware - more reliable than cors package for complex cases
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  
+  // Set CORS headers
+  if (origin && allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,Accept,Origin');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  next();
+});
+
+console.log('✅ CORS configured');
+
+// Static file serving
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 console.log('✅ Static file serving configured');
-
-// CORS configuration
-const corsOptions = {
-  origin: [
-    'https://ecommerce-dashboard-frontend-cyan.vercel.app',
-    'http://localhost:3000', // for local development
-    'http://localhost:5173', // if using Vite
-  ],
-  credentials: true,
-  optionsSuccessStatus: 200,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: [
-    'Content-Type', 
-    'Authorization', 
-    'X-Requested-With',
-    'Accept',
-    'Origin'
-  ]
-};
-app.use(cors(corsOptions));
-
-// Handle preflight requests
-app.use(cors(corsOptions));
-console.log('✅ OPTIONS handler configured');
 
 // Body parser middleware
 app.use(express.json({ limit: '10mb' }));
@@ -46,18 +52,21 @@ app.get('/', (req, res) => {
   res.status(200).json({ 
     message: 'API is running',
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || 'development',
+    cors: 'enabled'
   });
 });
-console.log('✅ Health check endpoint configured');
 
-// COMMENT OUT ALL ROUTES FIRST - Uncomment one by one to find the problematic one
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'healthy',
+    timestamp: new Date().toISOString()
+  });
+});
 
-// Step 1: Test with no routes first
-console.log('📝 Routes are commented out for debugging');
+console.log('✅ Health check endpoints configured');
 
-// Uncomment these one by one to find which one causes the error:
-
+// Routes
 console.log('🔍 Loading user routes...');
 import userRoutes from './routes/user.routes';
 app.use('/api/v1/users', userRoutes);
@@ -78,12 +87,21 @@ import dashboard from './routes/dashboard.routes';
 app.use('/api/v1/dashboard', dashboard);
 console.log('✅ Dashboard routes loaded');
 
-// 404 handler for unmatched routes
-app.use('/', (req, res) => {
+// 404 handler for unmatched routes - NO WILDCARDS
+app.use((req, res, next) => {
   res.status(404).json({
     error: 'Route not found',
     path: req.originalUrl,
-    method: req.method
+    method: req.method,
+    available_routes: [
+      'GET /',
+      'GET /health',
+      'POST /api/v1/users/login',
+      '/api/v1/users/*',
+      '/api/v1/products/*',
+      '/api/v1/orders/*',
+      '/api/v1/dashboard/*'
+    ]
   });
 });
 console.log('✅ 404 handler configured');
