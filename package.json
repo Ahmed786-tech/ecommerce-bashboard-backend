@@ -1,12 +1,17 @@
 {
-  "name": "e-dashboad",
+  "name": "e-dashboard",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "E-commerce dashboard backend",
+  "main": "dist/src/index.js",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
-    "seed": "ts-node src/seed.ts"
+    "dev:ts-node": "ts-node src/index.ts",
+    "start": "node dist/src/index.js",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "vercel-build": "echo 'No build step required for Vercel'",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist 'package-lock.json' 'node_modules'"
   },
   "keywords": [],
   "author": "",
@@ -25,11 +30,11 @@
   },
   "devDependencies": {
     "@types/cors": "^2.8.18",
-    "@types/express": "^5.0.1",
+    "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/multer": "^1.4.12",
-    "@types/node": "^22.15.18",
-    "@vercel/node": "^5.2.2",
+    "@types/node": "^22.15.31",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
   }
