@@ -13,20 +13,27 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 console.log('✅ Static file serving configured');
 
 // CORS configuration
-app.use(cors({
+const corsOptions = {
   origin: [
     'https://ecommerce-dashboard-frontend-cyan.vercel.app',
-    'http://localhost:3000',
-    'http://localhost:3001'
+    'http://localhost:3000', // for local development
+    'http://localhost:5173', // if using Vite
   ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
-}));
-console.log('✅ CORS configured');
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: [
+    'Content-Type', 
+    'Authorization', 
+    'X-Requested-With',
+    'Accept',
+    'Origin'
+  ]
+};
+app.use(cors(corsOptions));
 
 // Handle preflight requests
-app.options('/', cors());
+app.options('*', cors(corsOptions));
 console.log('✅ OPTIONS handler configured');
 
 // Body parser middleware
