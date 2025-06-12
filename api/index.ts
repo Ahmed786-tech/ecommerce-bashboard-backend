@@ -31,10 +31,12 @@ export default async (req: Request, res: Response) => {
     // Handle the request using your Express app
     return app(req as any, res as any);
   } catch (error) {
+    const err = error as Error;
+
     console.error('Serverless function error:', error);
     return res.status(500).json({ 
       error: 'Internal server error',
-      message: process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'
+      message: process.env.NODE_ENV === 'development' ?  err.message : 'Something went wrong'
     });
   }
 };
