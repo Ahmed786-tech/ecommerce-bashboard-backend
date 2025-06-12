@@ -33,7 +33,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Handle preflight requests
-app.options('*', cors(corsOptions));
+app.use(cors(corsOptions));
 console.log('✅ OPTIONS handler configured');
 
 // Body parser middleware
