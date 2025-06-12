@@ -16,24 +16,26 @@ const allowedOrigins = [
 ];
 
 // Manual CORS middleware - more reliable than cors package for complex cases
+
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  
+
   // Set CORS headers
   if (origin && allowedOrigins.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
   }
-  
+
   res.header('Access-Control-Allow-Credentials', 'true');
   res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH,OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,Accept,Origin');
-  
+
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+    res.sendStatus(204); // Respond with "No Content" for preflight requests
+    return;
   }
-  
-  next();
+
+  next(); // Proceed to the next middleware for other requests
 });
 
 console.log('✅ CORS configured');
